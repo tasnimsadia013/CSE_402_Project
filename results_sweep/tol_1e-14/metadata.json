@@ -1,0 +1,61 @@
+{
+  "config": {
+    "ftol": 1e-14,
+    "max_iterations": 1000,
+    "ratio_window": 3,
+    "efficiency_window": 3,
+    "reuse_limit": 3,
+    "newton_start": "left"
+  },
+  "repeats": 10,
+  "seed": 402,
+  "methods": [
+    "bisection",
+    "trisection",
+    "false_position",
+    "newton",
+    "secant",
+    "static_bf",
+    "static_tf",
+    "adaptive_threshold",
+    "cost_aware",
+    "stagnation_aware"
+  ],
+  "problems": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15"
+  ],
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "generated_at_utc": "2026-09-24T08:41:11Z",
+  "timing": "One warm-up; randomized method order per repetition; traces disabled; wall and process CPU clocks",
+  "source_sha256": {
+    "rootfinding/experiment.py": "8a2596656e6d35e466c2b4118541994d0c873c66b0ca5fa9a27f812a27a687b5",
+    "rootfinding/plotting.py": "3272b395b97bb403ab3b52c85e6144c33fb3416e6e22880fbc5918bb741d2008",
+    "rootfinding/__init__.py": "89eb6c4958fab07f7e390451ed3c2ed3d9d9c2ef1591ac2e44bfb755ae52aca0",
+    "rootfinding/solvers.py": "016f3133eace4865b19cf5381b8a5961a9354c66916dc8734d82869bb533a210",
+    "rootfinding/problems.py": "a94b82ff98a9da62c5e76f21eb48d2b9f6e68a368bba2d191ba99b3b67992423",
+    "main.py": "3d0d06bbbec7cf3c4371be47f05f5fa8f85634167424954e5d0b1294e93ae374",
+    "Group-1B1.pdf": "c95b061ab5a641afcd51198ec21c165425ff23a0d7544a7d0a1d3f23651e7e17",
+    "numerical base paper.pdf": "fdc5b3dea7f31e534b2eaa0ff388bc35e5cd22b0aef1822af112f5606ec7f241"
+  },
+  "statuses": {
+    "converged": 146,
+    "zero_derivative": 3,
+    "precision_limit": 1
+  }
+}
