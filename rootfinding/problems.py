@@ -1,5 +1,3 @@
-"""Table 1 of Badr et al. (2021), plus separately labelled stress cases."""
-
 from dataclasses import dataclass
 import math
 from typing import Callable
@@ -13,7 +11,6 @@ class Problem:
     b: float
     f: Callable[[float], float]
     derivative: Callable[[float], float]
-    # Backend-independent expression for independent high-precision verification.
     reference_f: Callable
     suite: str = "paper"
 
@@ -49,7 +46,6 @@ def stress_problems():
 
 
 def reference_root(problem):
-    """80-digit bisection, independent of the tested double-precision solvers."""
     import mpmath as mp
     with mp.workdps(80):
         a, b = mp.mpf(str(problem.a)), mp.mpf(str(problem.b))
@@ -60,7 +56,7 @@ def reference_root(problem):
         if f(b) == 0:
             return str(b)
         if mp.sign(fa) == mp.sign(f(b)):
-            raise ValueError("Reference interval does not bracket a root")
+            raise ValueError("reference interval does not bracket a root")
         for _ in range(270):
             x = (a+b)/2
             fx = f(x)

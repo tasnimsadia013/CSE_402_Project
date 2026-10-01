@@ -1,5 +1,3 @@
-"""Headless PNG and PDF figures suitable for the project presentation."""
-
 from pathlib import Path
 
 

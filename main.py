@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Single entry point for the Group-1B1 comparative study."""
 
 import argparse
 from pathlib import Path
@@ -48,7 +47,7 @@ def main(argv=None):
         print(f"{'Suite':7} {'Method':22} {'Success':9} {'Iter':>7} {'f calls':>9} {'df calls':>9}")
         for s in summaries:
             print(f"{s['suite']:7} {s['method']:22} {s['successes']:2}/{s['problems']:<6} {s['iterations_all']:7} {s['function_evaluations_all']:9} {s['derivative_evaluations_all']:9}")
-        print(f"Report: {(out/'report.md').resolve()}")
+        # print(f"Report: {(out/'report.md').resolve()}")
 
 
 if __name__ == "__main__":

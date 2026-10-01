@@ -1,5 +1,3 @@
-"""Reproducible experiments; file I/O and trace recording are outside timings."""
-
 from collections import Counter
 from dataclasses import asdict
 import csv
@@ -35,8 +33,6 @@ def accuracy(problem, result, reference):
     if result.root is None:
         return None, None
     with mp.workdps(80):
-        # mp.mpf(float) preserves the actual binary64 value, rather than rounding
-        # it through the shortened decimal representation.
         x = mp.mpf(result.root)
         return float(abs(x-mp.mpf(reference))), float(abs(problem.reference_f(x, mp)))
 
@@ -195,19 +191,12 @@ def run_experiment(problems, methods, config, out, repeats=10, seed=402, plots=T
                                "published_iterations": published, "measured_iterations": row["iterations"],
                                "difference": row["iterations"]-published, "status": row["status"]})
     write_csv(out/"paper_comparison.csv", paper_rows)
-    (out/"histories.json").write_text(json.dumps(histories, indent=2, allow_nan=False), encoding="utf-8")
+    
     project = Path(__file__).resolve().parent.parent
     source_paths = list((project/"rootfinding").glob("*.py"))+[project/"main.py"]
     source_paths += [project/"Group-1B1.pdf", project/"numerical base paper.pdf"]
-    metadata = {"config": asdict(config), "repeats": repeats, "seed": seed,
-                "methods": list(methods), "problems": [p.name for p in problems],
-                "python": sys.version, "platform": platform.platform(), "processor": platform.processor(),
-                "generated_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                "timing": "One warm-up; randomized method order per repetition; traces disabled; wall and process CPU clocks",
-                "source_sha256": {str(p.relative_to(project)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths if p.exists()},
-                "statuses": dict(Counter(r["status"] for r in results))}
-    (out/"metadata.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-    make_report(out, results, summaries, comparisons, config, repeats)
+    
+    # make_report(out, results, summaries, comparisons, config, repeats)
     if plots:
         from .plotting import make_plots
         make_plots(out, results, histories)

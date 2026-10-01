@@ -1,9 +1,3 @@
-"""One bracket engine, pluggable selectors, and two unsafeguarded open methods.
-
-Only abs(f(x)) <= ftol constitutes success. Precision exhaustion is a failure,
-not an excuse to silently relax the requested tolerance.
-"""
-
 from collections import deque
 from dataclasses import dataclass, field
 import math
@@ -62,7 +56,6 @@ class EvaluationError(Exception):
 
 
 class Evaluator:
-    """Exact-point caching is restricted to function evaluations, per solve."""
 
     def __init__(self, f, derivative=None):
         self.f, self.derivative = f, derivative
@@ -95,7 +88,6 @@ class Evaluator:
 
 
 def opposite(x, y):
-    # Avoid multiplication: f(a)*f(b) can underflow or overflow.
     return (x < 0 < y) or (y < 0 < x)
 
 
@@ -111,12 +103,6 @@ class Bracket:
     fb: float
 
     def narrow(self, points):
-        """First adjacent sign-changing subinterval using ALL sampled points.
-
-        For the paper benchmarks this is the intersection/max-min update.
-        Selecting an adjacent sign change also stays valid for oscillatory
-        functions where independently proposed intervals can be disjoint.
-        """
         values = {self.a: self.fa, self.b: self.fb}
         values.update((x, fx) for x, fx in points if self.a <= x <= self.b)
         ordered = sorted(values.items())
@@ -130,7 +116,6 @@ class Bracket:
 
 
 class StepContext:
-    """Lazy candidates: a selector only pays for the points it requests."""
 
     def __init__(self, bracket, evaluator, previous_residual, ftol):
         self.bracket = bracket
@@ -144,7 +129,6 @@ class StepContext:
             return self.samples[kind]
         q = self.bracket
         if kind == "false_position":
-            # Scale weights to avoid overflow in fb-fa or abs(fa)+abs(fb).
             scale = max(abs(q.fa), abs(q.fb))
             wa, wb = abs(q.fa)/scale, abs(q.fb)/scale
             xs = [interpolate(q.a, q.b, wa/(wa+wb))]
@@ -216,7 +200,6 @@ class CostAwareSelector(Selector):
         }
 
     def observe(self, old, new, old_residual, new_residual, kind, evaluations):
-        # Difference of logs is safer than forming old/new; retain negative gains.
         floor = sys.float_info.min
         gain = math.log(max(old_residual, floor))-math.log(max(new_residual, floor))
         self.scores[kind].append(gain/evaluations if evaluations else 0.)
@@ -258,12 +241,7 @@ def make_selector(method, config):
 
 def solve(f: Callable, a: float, b: float, method="adaptive_threshold", *,
           derivative=None, config=None, trace=True, selector=None):
-    """Solve with a fresh policy state. Newton starts at a by default.
-
-    A custom Selector can replace a bracketed method's policy. The callable
-    must be deterministic because repeated function values are cached.
-    Invalid API arguments raise ValueError; numerical failures return Result.
-    """
+    
     config = config or Config()
     if method not in METHODS:
         raise ValueError(f"Unknown method {method!r}; choose one of {METHODS}")
@@ -350,7 +328,6 @@ def solve(f: Callable, a: float, b: float, method="adaptive_threshold", *,
             points = context.all_points()
             for sampled in points:
                 record_best(sampled)
-            # Any sampled root is valid, even if a policy would reject that method.
             terminal = min(points, key=lambda p: abs(p[1]))
             converged = abs(terminal[1]) <= config.ftol
             if converged:
